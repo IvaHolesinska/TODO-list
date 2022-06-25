@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState } from "react"
+import React, { ChangeEvent, KeyboardEvent, useState } from "react"
 
 type Props = {}
 
@@ -12,9 +12,13 @@ const ListScreen: React.FC<Props> = () => {
 
   const handleNewTaskChange = (e: ChangeEvent<HTMLInputElement>) => setNewTask(e.target.value)
 
+  const handleNewTaskKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") setTasks((tasks) => [...tasks, { name: newTask }])
+  }
+
   return (
     <div>
-      <input value={newTask} onChange={handleNewTaskChange} />
+      <input value={newTask} onChange={handleNewTaskChange} onKeyPress={handleNewTaskKeyPress} />
     </div>
   )
 }
