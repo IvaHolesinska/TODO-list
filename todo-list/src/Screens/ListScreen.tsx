@@ -21,12 +21,19 @@ const ListScreen: React.FC<Props> = () => {
     }
   }
 
+  const deleteTask = (handleTask: Task) => {
+    setTasks((tasks) => tasks.filter((task) => task.id !== handleTask.id))
+  }
+
   return (
     <div>
       <input value={newTask} onChange={handleNewTaskChange} onKeyPress={handleNewTaskKeyPress} />
       <ul>
         {tasks.map((task) => (
-          <li key={task.id}>{task.name}</li>
+          <div key={task.id}>
+            <li>{task.name}</li>
+            <button onClick={() => deleteTask(task)}>delete</button>
+          </div>
         ))}
       </ul>
     </div>
