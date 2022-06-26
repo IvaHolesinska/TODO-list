@@ -29,10 +29,10 @@ const ListScreen: React.FC<Props> = () => {
   useEffect(() => {
     const today = new Date()
     const date = today.getDate() + ". " + (today.getMonth() + 1) + ". " + today.getFullYear()
-    const time = today.getHours() + ":" + today.getMinutes()
+    const time = today.getHours() + ":" + String(today.getMinutes()).padStart(2, "0")
     const dateTimeFormat = date + " " + time
     setDayTime(dateTimeFormat)
-  }, [tasks])
+  }, [newTask])
 
   /** add new tasks */
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
