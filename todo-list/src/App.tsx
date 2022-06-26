@@ -1,11 +1,12 @@
 import React from "react"
 import { BrowserRouter, Route, Routes } from "react-router-dom"
+import ListScreen from "./Screens/ListScreen"
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<div>TODO list</div>} />
+        <Route path="/" element={<ListScreen />} />
       </Routes>
     </BrowserRouter>
   )
