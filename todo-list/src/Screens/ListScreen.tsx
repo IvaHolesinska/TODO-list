@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FormEvent, useState } from "react"
+import React, { ChangeEvent, FormEvent, useEffect, useState } from "react"
 import { nanoid } from "nanoid"
 
 type Props = {}
@@ -6,22 +6,32 @@ type Props = {}
 type Task = {
   id: string
   name: string
+  date: string
 }
 
 const ListScreen: React.FC<Props> = () => {
   const [tasks, setTasks] = useState<Task[]>([])
   const [newTask, setNewTask] = useState("")
+  const [dayTime, setDayTime] = useState("")
 
   /** get the value from input */
-  const handleNewTaskValue = (e: ChangeEvent<HTMLInputElement>) => setNewTask(e.target.value)
+  const handleNewTaskValue = (e: ChangeEvent<HTMLInputElement>) => {
+    setNewTask(e.target.value)
+  }
+
+  useEffect(() => {
+    const today = new Date()
+    const date = today.getDate() + ". " + (today.getMonth() + 1) + ". " + today.getFullYear()
+    const time = today.getHours() + ":" + today.getMinutes()
+    const dateTimeFormat = date + " " + time
+    setDayTime(dateTimeFormat)
+  }, [tasks])
 
   /** add new tasks */
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    if (newTask !== "") {
-      setTasks((tasks) => [...tasks, { id: nanoid(), name: newTask }])
-      setNewTask("")
-    }
+    setTasks((tasks) => [...tasks, { id: nanoid(), name: newTask, date: dayTime }])
+    setNewTask("")
   }
 
   /** delete tasks */
@@ -45,8 +55,10 @@ const ListScreen: React.FC<Props> = () => {
       <ul>
         {tasks.map((task) => (
           <div key={task.id}>
-            <li>{task.name}</li>
-            <button onClick={() => handleDelete(task)}>delete</button>
+            <li>
+              <span>{task.name}</span> <span>{task.date}</span>
+              <button onClick={() => handleDelete(task)}>delete</button>
+            </li>
           </div>
         ))}
       </ul>
