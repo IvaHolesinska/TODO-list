@@ -1,5 +1,11 @@
 import React, { ChangeEvent, FormEvent, useEffect, useState } from "react"
+
 import { nanoid } from "nanoid"
+
+/** material UI library */
+import { Box, Button, Fab, List, ListItem, ListItemText, TextField } from "@mui/material"
+import DeleteTwoToneIcon from "@mui/icons-material/DeleteTwoTone"
+import AddIcon from "@mui/icons-material/Add"
 
 type Props = {}
 
@@ -19,6 +25,7 @@ const ListScreen: React.FC<Props> = () => {
     setNewTask(e.target.value)
   }
 
+  /** date and time of creating task */
   useEffect(() => {
     const today = new Date()
     const date = today.getDate() + ". " + (today.getMonth() + 1) + ". " + today.getFullYear()
@@ -43,26 +50,44 @@ const ListScreen: React.FC<Props> = () => {
   const sameValue = tasks.some((task) => task.name === newTask)
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <input type="text" value={newTask} onChange={handleNewTaskValue} />
-        <button disabled={!newTask || sameValue === true} type="submit">
-          Add task
-        </button>
-      </form>
+    <Box
+      sx={{ flexGrow: 1, maxWidth: 752, margin: "auto", marginTop: 5 }}
+      component="form"
+      onSubmit={handleSubmit}>
+      <TextField
+        id="standard-basic"
+        label="Add your task"
+        variant="standard"
+        color="success"
+        value={newTask}
+        onChange={handleNewTaskValue}
+      />
+      <Fab
+        size="small"
+        disabled={!newTask || sameValue === true}
+        type="submit"
+        color="success"
+        aria-label="add"
+        sx={{ marginTop: 1, marginLeft: 2 }}>
+        <AddIcon />
+      </Fab>
 
       {/** list of tasks */}
-      <ul>
+      <List sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}>
         {tasks.map((task) => (
-          <div key={task.id}>
-            <li>
-              <span>{task.name}</span> <span>{task.date}</span>
-              <button onClick={() => handleDelete(task)}>delete</button>
-            </li>
-          </div>
+          <ListItem key={task.id}>
+            <ListItemText>{task.name}</ListItemText> <ListItemText>{task.date}</ListItemText>
+            <Button
+              onClick={() => handleDelete(task)}
+              variant="outlined"
+              color="error"
+              endIcon={<DeleteTwoToneIcon />}>
+              delete
+            </Button>
+          </ListItem>
         ))}
-      </ul>
-    </div>
+      </List>
+    </Box>
   )
 }
 
