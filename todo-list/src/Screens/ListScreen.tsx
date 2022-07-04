@@ -3,13 +3,13 @@ import React, { ChangeEvent, FormEvent, useEffect, useState } from "react"
 import { nanoid } from "nanoid"
 
 /** material UI library */
-import { Box, Button, Fab, List, ListItem, ListItemText, TextField } from "@mui/material"
-import DeleteTwoToneIcon from "@mui/icons-material/DeleteTwoTone"
+import { Box, Fab, List, TextField } from "@mui/material"
 import AddIcon from "@mui/icons-material/Add"
+import { TODO } from "./TODOs"
 
 type Props = {}
 
-type Task = {
+export type Task = {
   id: string
   name: string
   date: string
@@ -37,8 +37,11 @@ const ListScreen: React.FC<Props> = () => {
   /** add new tasks */
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    setTasks((tasks) => [...tasks, { id: nanoid(), name: newTask, date: dayTime }])
-    setNewTask("")
+
+    if (isDisabled() === false) {
+      setTasks((tasks) => [...tasks, { id: nanoid(), name: newTask, date: dayTime }])
+      setNewTask("")
+    }
   }
 
   /** delete tasks */
@@ -47,7 +50,13 @@ const ListScreen: React.FC<Props> = () => {
   }
 
   /** check if the value of the input is already on the to-do lists */
-  const sameValue = tasks.some((task) => task.name === newTask)
+  const isDisabled = () => {
+    const sameValue = tasks.some((task) => task.name === newTask)
+    if (sameValue === true || !newTask) {
+      return true
+    }
+    return false
+  }
 
   return (
     <Box
@@ -64,7 +73,7 @@ const ListScreen: React.FC<Props> = () => {
       />
       <Fab
         size="small"
-        disabled={!newTask || sameValue === true}
+        disabled={isDisabled()}
         type="submit"
         color="success"
         aria-label="add"
@@ -75,16 +84,7 @@ const ListScreen: React.FC<Props> = () => {
       {/** list of tasks */}
       <List sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}>
         {tasks.map((task) => (
-          <ListItem key={task.id}>
-            <ListItemText>{task.name}</ListItemText> <ListItemText>{task.date}</ListItemText>
-            <Button
-              onClick={() => handleDelete(task)}
-              variant="outlined"
-              color="error"
-              endIcon={<DeleteTwoToneIcon />}>
-              delete
-            </Button>
-          </ListItem>
+          <TODO task={task} remove={(task) => handleDelete(task)} />
         ))}
       </List>
     </Box>
